@@ -1,9 +1,22 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, chromium } from '@playwright/test';
 import { LoginPage } from './pageobjects/LoginPage';
 
 
-test('purchase an item', async ({ page }) => {
+//test('purchase an item', async ({ page }) => {
+test('purchase an item in incognito mode', async () => {
+
+//se agregaran 3 lineas 02 junio
+const browser = await chromium.launch({ headless: false }); // usa true en CI
+const context = await browser.newContext(); // modo incógnito
+const page = await context.newPage();
+
+
 await page.goto('https://www.saucedemo.com/');
+
+//se agregara 1 lineas 02 junio
+await page.waitForLoadState('networkidle');
+
+
 
 const loginModule = new LoginPage(page)
 
@@ -22,7 +35,8 @@ const expectedDescription = await randomItem.locator('.inventory_item_desc').inn
 const expectedName = await randomItem.locator('.inventory_item_name').innerText();
 const expectedPrice = await randomItem.locator('.inventory_item_price').innerText();
 
-console.log(`Price: ${expectedPrice} Name: ${expectedName} Description: ${expectedDescription}`);
+//se quito linea 02 junio
+//console.log(`Price: ${expectedPrice} Name: ${expectedName} Description: ${expectedDescription}`);
 
 await randomItem.getByRole('button', { name: 'Add to cart' }).click();
 
@@ -40,6 +54,7 @@ expect(actualPrice).toEqual(expectedPrice);
 
 await page.getByRole('button', {name: 'Checkout'}).click();
 
+//se quita del codigo 02 junio pero yo lo deje
 await expect(page.getByRole('button', {name: 'Continue'})).toBeVisible();
 
 await page.getByRole('textbox', {name: 'First Name'}).fill('Kanao');
