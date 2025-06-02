@@ -6,7 +6,8 @@ import { LoginPage } from './pageobjects/LoginPage';
 test('purchase an item in incognito mode', async () => {
 
 //se agregaran 3 lineas 02 junio
-const browser = await chromium.launch({ headless: false }); // usa true en CI
+//const browser = await chromium.launch({ headless: true }); // usa true en CI
+const browser = await chromium.launch({ headless: process.env.CI ? true : false });
 const context = await browser.newContext(); // modo incógnito
 const page = await context.newPage();
 
